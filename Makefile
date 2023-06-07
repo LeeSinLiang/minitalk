@@ -6,14 +6,14 @@
 #    By: sinlee <sinlee@student42.fr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/02 08:15:57 by sinlee            #+#    #+#              #
-#    Updated: 2023/06/02 17:06:00 by sinlee           ###   ########.fr        #
+#    Updated: 2023/06/07 09:52:56 by sinlee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 NAME = server client
-
+BONUS = server_bonus client_bonus
 SRCS = client.c server.c
 
 FTPRINTFDIR = ./ft_printf/
@@ -23,13 +23,19 @@ RM = rm -rf
 
 all: ${NAME}
 
-bonus: ${NAME}
+bonus: ${BONUS}
 
 server: server.c ${FTPRINTF}
 	@$(CC) $(CFLAGS) server.c -I ft_printf/include -I ft_printf/libft ${FTPRINTF} -o server 
 
 client: client.c ${FTPRINTF}
 	@$(CC) $(CFLAGS) client.c -I ft_printf/include -I ft_printf/libft ${FTPRINTF} -o client
+
+server_bonus: server_bonus.c ${FTPRINTF}
+	@$(CC) $(CFLAGS) server_bonus.c -I ft_printf/include -I ft_printf/libft ${FTPRINTF} -o server 
+
+client_bonus: client_bonus.c ${FTPRINTF}
+	@$(CC) $(CFLAGS) client_bonus.c -I ft_printf/include -I ft_printf/libft ${FTPRINTF} -o client
 
 ${FTPRINTF}:
 	@make all -C ${FTPRINTFDIR}
@@ -44,4 +50,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re

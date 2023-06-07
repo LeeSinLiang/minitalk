@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sinlee <sinlee@student42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 06:10:59 by sinlee            #+#    #+#             */
-/*   Updated: 2023/06/07 09:45:55 by sinlee           ###   ########.fr       */
+/*   Updated: 2023/06/07 09:45:24 by sinlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 static void	bin_to_char(int signum, char *c)
 {
@@ -35,12 +35,14 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 		i = 0;
 		if (!c)
 		{
+			kill(pid, SIGUSR1);
 			pid = 0;
 			return ;
 		}
 		ft_putchar_fd(c, 1);
 		c = 0;
 	}
+	kill(pid, SIGUSR2);
 }
 
 int	main(void)

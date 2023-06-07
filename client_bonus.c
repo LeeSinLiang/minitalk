@@ -1,18 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sinlee <sinlee@student42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 17:00:51 by sinlee            #+#    #+#             */
-/*   Updated: 2023/06/07 09:48:48 by sinlee           ###   ########.fr       */
+/*   Updated: 2023/06/07 09:45:33 by sinlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 static int	g_receive;
+
+void	sig_handler(int signum, siginfo_t *info, void *context)
+{
+	static int	i;
+
+	(void)context;
+	(void)info;
+	(void)signum;
+	g_receive = 1;
+	if (signum == SIGUSR2)
+		i++;
+	else if (signum == SIGUSR1)
+		ft_printf("Num of bytes received -> %d", i / 8);
+}
 
 void	char_to_bin(char c, int pid)
 {
@@ -44,6 +58,7 @@ void	char_to_bin(char c, int pid)
 
 int	main(int argc, char **argv)
 {
+	struct sigaction	sa;
 	int					byte_index;
 	int					pid;
 
@@ -54,6 +69,16 @@ int	main(int argc, char **argv)
 	}
 	byte_index = -1;
 	pid = ft_atoi(argv[1]);
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART | SA_SIGINFO;
+	sa.sa_sigaction = sig_handler;
+	if (sigaction(SIGUSR1, &sa, NULL) == -1 || \
+		sigaction(SIGUSR2, &sa, NULL) == -1)
+	{
+		ft_printf("Error encountered. Exiting.\n");
+		return (1);
+	}
+	ft_printf("Num of bytes sent -> %d\n", ft_strlen(argv[2]));
 	while (argv[2][++byte_index])
 		char_to_bin(argv[2][byte_index], pid);
 	char_to_bin('\0', pid);
